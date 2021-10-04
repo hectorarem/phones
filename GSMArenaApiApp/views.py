@@ -18,12 +18,15 @@ class PhoneDetailViewSet(viewsets.ModelViewSet):
         if queryset.count() > 0:
             return queryset.all()
         else:
+            session = requests.Session()
             url = "https://m.gsmarena.com/res.php3"
             arg = {"sSearch": phoneModel}
-            webscrap = requests.get(url, params=arg)
+            webscrap = session.get(url, params=arg)
+            print(webscrap.text)
             name1 = webscrap.text.split('swiper-half-slide">')[1].split("<a href=")[1].split(">")[0]
+            print(name1)
             newUrl = "https://m.gsmarena.com/" + name1
-            phoneScrap = requests.get(newUrl)
+            phoneScrap = session.get(newUrl)
             try:
                 name = phoneScrap.text.split("<title>")[1].split("- Full phone specifications")[0]
             except:
